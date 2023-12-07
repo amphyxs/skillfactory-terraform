@@ -1,0 +1,6 @@
+.terraform/
+key.json
+.directory
+*.tfstate
+*.tfstate.*
+.env
