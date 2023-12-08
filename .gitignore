@@ -4,3 +4,4 @@ key.json
 *.tfstate
 *.tfstate.*
 .env
+secrets.txt
