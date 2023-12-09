@@ -29,9 +29,8 @@ resource "yandex_compute_instance" "vm" {
     }
   }
   network_interface {
-    subnet_id      = var.subnet_id
-    nat            = true
-    nat_ip_address = yandex_vpc_address.vm_address.external_ipv4_address[0].address
+    subnet_id = var.subnet_id
+    nat       = true
   }
   resources {
     cores  = 2

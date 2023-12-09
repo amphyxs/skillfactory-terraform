@@ -10,7 +10,7 @@ terraform {
 
   backend "s3" {
     endpoint   = "http://storage.yandexcloud.net"
-    bucket     = "amphyx-tf-storage-bucket"
+    bucket     = "tf-learning-storage-bucket"
     key        = "./terraform.tfstate"
     region     = "ru-central1-a"
     access_key = var.access_key
@@ -26,7 +26,7 @@ provider "yandex" {
   service_account_key_file = "./key.json"
   cloud_id                 = var.cloud_id
   folder_id                = var.folder_id
-  zone                     = "ru-central1-a"
+  zone                     = "ru-central1-b"
 }
 
 resource "yandex_vpc_network" "test-terraform-network" {
@@ -48,19 +48,17 @@ resource "yandex_vpc_subnet" "subnet-for-instance2" {
 module "instance1" {
   source = "./my-instance"
 
-  instance_name  = "tf-instance1"
-  image_family   = "lemp"
-  public_ip_zone = "ru-central1-a"
-  subnet_id      = yandex_vpc_subnet.subnet-for-instance1.id
+  instance_name = "tf-instance1"
+  image_family  = "lemp"
+  subnet_id     = yandex_vpc_subnet.subnet-for-instance1.id
 }
 
 module "instance2" {
   source = "./my-instance"
 
-  instance_name  = "tf-instance2"
-  image_family   = "lamp"
-  public_ip_zone = "ru-central1-b"
-  subnet_id      = yandex_vpc_subnet.subnet-for-instance2.id
+  instance_name = "tf-instance2"
+  image_family  = "lamp"
+  subnet_id     = yandex_vpc_subnet.subnet-for-instance2.id
 }
 
 resource "yandex_lb_target_group" "group" {
@@ -69,12 +67,12 @@ resource "yandex_lb_target_group" "group" {
 
   target {
     subnet_id = yandex_vpc_subnet.subnet-for-instance1.id
-    address   = module.instance1.external_vm_ip_address
+    address   = module.instance1.internal_vm_ip_address
   }
 
   target {
     subnet_id = yandex_vpc_subnet.subnet-for-instance2.id
-    address   = module.instance2.external_vm_ip_address
+    address   = module.instance2.internal_vm_ip_address
   }
 }
 
